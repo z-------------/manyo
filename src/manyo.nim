@@ -94,7 +94,7 @@ when isMainModule:
         elif (subBase = sub.map(toBase); t.hasKey($subBase)):
           stdout.write(t[$subBase])
           i = j
-        elif j > 0:
+        elif j > i:
           continue
         else:
           stdout.write(sub)
