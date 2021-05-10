@@ -1,10 +1,13 @@
 import std/rdstdin
 import std/tables
 import std/unicode
+import std/sequtils
 
 import ./kana
 
 const t: Table[string, string] = {
+  # single kana
+
   "あ": "安",
   "い": "以",
   "う": "宇",
@@ -63,6 +66,11 @@ const t: Table[string, string] = {
   "を": "遠",
 
   "ん": "无",
+
+  # combinations
+
+  "うり": "瓜",
+  "まん": "万",
 }.toTable
 
 when isMainModule:
@@ -72,11 +80,17 @@ when isMainModule:
     running = false
 
   while running:
-    let line = readLineFromStdin("> ")
-    for r in line.runes:
-      let c = $r.toBase
-      if t.hasKey(c):
-        stdout.write(t[c])
-      else:
-        stdout.write(c)
+    let line = readLineFromStdin("> ").toRunes
+    var i = 0
+    while i <= line.high:
+      for j in countdown(min(i + 5, line.high), i):
+        let sub = $line[i..j].map(toBase)
+        if t.hasKey(sub):
+          stdout.write(t[sub])
+          i = j
+        elif j > 0:
+          continue
+        else:
+          stdout.write(sub)
+      inc i
     stdout.write('\n')
