@@ -71,6 +71,8 @@ const t: Table[string, string] = {
 
   "うり": "瓜",
   "まん": "万",
+  "ぶん": "文",
+  "ぶんこ": "文庫",
 }.toTable
 
 when isMainModule:
@@ -84,9 +86,13 @@ when isMainModule:
     var i = 0
     while i <= line.high:
       for j in countdown(min(i + 5, line.high), i):
-        let sub = $line[i..j].map(toBase)
-        if t.hasKey(sub):
-          stdout.write(t[sub])
+        let sub = line[i..j]
+        var subBase: seq[Rune]
+        if t.hasKey($sub):
+          stdout.write(t[$sub])
+          i = j
+        elif (subBase = sub.map(toBase); t.hasKey($subBase)):
+          stdout.write(t[$subBase])
           i = j
         elif j > 0:
           continue
