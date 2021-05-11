@@ -86,13 +86,9 @@ when isMainModule:
     var i = 0
     while i <= line.high:
       for j in countdown(min(i + 5, line.high), i):
-        let sub = line[i..j]
-        var subBase: seq[Rune]
-        if t.hasKey($sub):
+        var sub = line[i..j]
+        if t.hasKey($sub) or (sub = sub.map(toBase); t.hasKey($sub)):
           stdout.write(t[$sub])
-          i = j
-        elif (subBase = sub.map(toBase); t.hasKey($subBase)):
-          stdout.write(t[$subBase])
           i = j
         elif j > i:
           continue
