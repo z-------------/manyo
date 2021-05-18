@@ -75,6 +75,23 @@ const t: Table[string, string] = {
   "ぶんこ": "文庫",
 }.toTable
 
+proc process(line: seq[Rune]): string =
+  var i = 0
+  while i <= line.high:
+    for j in countdown(min(i + 5, line.high), i):
+      var sub = line[i..j]
+      if t.hasKey($sub) or (sub = sub.map(toBase); t.hasKey($sub)):
+        result.add(t[$sub])
+        i = j
+      elif j > i:
+        continue
+      else:
+        result.add($sub)
+    inc i
+
+proc process(line: string): string =
+  process(line.toRunes)
+
 when isMainModule:
   var running = true
 
@@ -82,17 +99,7 @@ when isMainModule:
     running = false
 
   while running:
-    let line = readLineFromStdin("> ").toRunes
-    var i = 0
-    while i <= line.high:
-      for j in countdown(min(i + 5, line.high), i):
-        var sub = line[i..j]
-        if t.hasKey($sub) or (sub = sub.map(toBase); t.hasKey($sub)):
-          stdout.write(t[$sub])
-          i = j
-        elif j > i:
-          continue
-        else:
-          stdout.write(sub)
-      inc i
-    stdout.write('\n')
+    let
+      line = readLineFromStdin("> ")
+      processed = process(line)
+    stdout.writeLine(processed)
