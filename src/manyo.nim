@@ -1,4 +1,3 @@
-import std/rdstdin
 import std/tables
 import std/unicode
 import std/sequtils
@@ -93,13 +92,7 @@ proc process(line: string): string =
   process(line.toRunes)
 
 when isMainModule:
-  var running = true
-
-  setControlCHook do:
-    running = false
-
-  while running:
-    let
-      line = readLineFromStdin("> ")
-      processed = process(line)
+  var line: string
+  while stdin.readLine(line):
+    let processed = process(line)
     stdout.writeLine(processed)
